@@ -117,3 +117,55 @@ app.post('/patient', (req, res) => {
     message: 'New Patient successfully created'
   })
 })
+
+app.get('/patient/:id', (req, res) => {
+  let patient = patientdb.filter(item => item.id == req.params.id)
+  if (patient.length === 0) {
+    return res.status(404).send({
+      success: false,
+      message: 'Patient not found'
+    })
+  }
+  return res.status(200).send({
+    success: true,
+    message: `Here is the patient of id ${req.params.id}`,
+    patient: patientdb[0]
+  })
+})
+
+app.put('/patient/:id', (req, res) => {
+  let patient = patientdb.filter(item => item.id == req.params.id)
+  if (patient.length === 0) {
+    return res.status(404).send({
+      success: false,
+      message: 'Patient not found'
+    })
+  }
+
+  patientdb = patientdb.map(item => {
+    if (item.id == req.params.id) item = { id: item.id, ...req.body }
+    return item
+  })
+
+  return res.status(200).send({
+    success: true,
+    message: 'Patient successfully updated',
+  })
+})
+
+app.delete('/patient/:id', (req, res) => {
+  let patient = patientdb.filter(item => item.id == req.params.id)
+  if (patient.length === 0) {
+    return res.status(404).send({
+      success: false,
+      message: 'Patient not found'
+    })
+  }
+
+  patient = patientdb.filter(item => item.id != req.params.id)
+
+  return res.status(200).send({
+    success: true,
+    message: 'Patient successfully deleted'
+  })
+})
